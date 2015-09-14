@@ -1,0 +1,129 @@
+﻿<controls:MetroWindow x:Class="HSDTWinrate.SettingsWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      xmlns:src="clr-namespace:HSDTWinrate"
+                      WindowStyle="ToolWindow" Title="DWRPlugin Settings" BorderBrush="{DynamicResource AccentColorBrush}"
+                      mc:Ignorable="d" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ObjectDataProvider x:Key="FindCriteria" ObjectType="{x:Type src:ConfigProp}" />
+            <src:RadioButtonCheckedConverter x:Key="RadioButtonCheckedConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary
+                    Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </controls:MetroWindow.Resources>
+    <Grid Margin="1" HorizontalAlignment="Left" VerticalAlignment="Top" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="296"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Column="0" Grid.Row="0" Header="Single Deck Stats Calculation" Width="285">
+            <ScrollViewer>
+                <StackPanel>
+                    <Label Content="Stats are calculated for" FontWeight="Bold"/>
+                    <RadioButton Content="today" Height="26" GroupName="statsDeckTimeGroup"                             
+                                 IsChecked="{Binding TimeDeckProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.today}}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="from " VerticalAlignment="Center" GroupName="statsDeckTimeGroup"
+                                 IsChecked="{Binding TimeDeckProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.custom}}" IsEnabled="False"/>
+                        <controls:NumericUpDown Maximum="23" Minimum="0" Speedup="False" Value="14" StringFormat="00" IsEnabled="False" />
+                        <controls:NumericUpDown Maximum="59" Minimum="0" Speedup="False" Value="55" StringFormat="00" IsEnabled="False" />
+                        <Label Content="until now." />
+                    </StackPanel>
+                    <RadioButton Content="this week" Height="26" GroupName="statsDeckTimeGroup"                             
+                                 IsChecked="{Binding TimeDeckProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.week}}"/>
+                    <RadioButton Content="this season" Height="26" GroupName="statsDeckTimeGroup"                             
+                                 IsChecked="{Binding TimeDeckProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.season}}"/>
+                    <RadioButton Content="all time" Height="26" GroupName="statsDeckTimeGroup"
+                                 IsChecked="{Binding TimeDeckProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.total}}"/>
+                    <Separator/>
+                    <Label Content="Stats are calculated for" FontWeight="Bold"/>
+                    <RadioButton Content="current deck version" Height="26" GroupName="statsDeckVersionGroup" IsChecked="{Binding VersionDeckProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:DeckVersion.current}}"/>
+                    <RadioButton Content="all deck versions" Height="26" GroupName="statsDeckVersionGroup" IsChecked="{Binding VersionDeckProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:DeckVersion.all}}"/>
+                </StackPanel>
+            </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Column="0" Grid.Row="1" Header="Output">
+            <ScrollViewer>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Label Content="Dir:" />
+                        <TextBox x:Name="OutputFolderTextBox" Height="23" TextWrapping="Wrap" IsEnabled="False"
+                             Text="{Binding Source={StaticResource FindCriteria}, Path=OutputPath, Mode=OneWay}" Width="210" />
+                        <Button Content="..." Width="20" Click="Button_Click_1"/>
+                    </StackPanel>
+                    <Separator />
+                    <Label Content="Textfiles to Update" FontWeight="Bold" />
+                    <CheckBox Height="26" Content="Deck Name &quot;DeckName.txt&quot;" 
+                             IsChecked="{Binding Source={StaticResource FindCriteria}, Path=OutputDeckName}" />
+                    <CheckBox Height="26" Content="Stats W-L (Ratio) &quot;DeckStats.txt&quot;" 
+                             IsChecked="{Binding Source={StaticResource FindCriteria}, Path=OutputDeckStats}" />
+                    <CheckBox Height="26" Content="Name/WL (2 Lines) &quot;DeckWL.txt&quot;" 
+                             IsChecked="{Binding Source={StaticResource FindCriteria}, Path=OutputDeckCombined}" />
+                    <CheckBox Height="26" Content="Stats all decks  &quot;OverallWL.txt&quot;" 
+                             IsChecked="{Binding Source={StaticResource FindCriteria}, Path=OutputOverall}" />
+                </StackPanel>
+            </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Grid.Row="0" Header="Overall Stats Settings" Width="285">
+            <ScrollViewer>
+                <StackPanel>
+                    <Label Content="Stats are calculated for" FontWeight="Bold"/>
+                    <RadioButton Content="today" Height="26" GroupName="statsOverallTimeGroup"                             
+                                 IsChecked="{Binding TimeOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.today}}"/>
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton Content="from " VerticalAlignment="Center" GroupName="statsOverallTimeGroup"
+                                 IsChecked="{Binding TimeOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.custom}}" IsEnabled="False"/>
+                        <controls:NumericUpDown Maximum="23" Minimum="0" Speedup="False" Value="14" StringFormat="00" IsEnabled="False" />
+                        <controls:NumericUpDown Maximum="59" Minimum="0" Speedup="False" Value="55" StringFormat="00" IsEnabled="False" />
+                        <Label Content="until now." />
+                    </StackPanel>
+                    <RadioButton Content="this week" Height="26" GroupName="statsOverallTimeGroup"                             
+                                 IsChecked="{Binding TimeOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.week}}"/>
+                    <RadioButton Content="this season" Height="26" GroupName="statsOverallTimeGroup"                             
+                                 IsChecked="{Binding TimeOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.season}}"/>
+                    <RadioButton Content="all time" Height="26" GroupName="statsOverallTimeGroup"
+                                 IsChecked="{Binding TimeOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:TimeFrame.total}}"/>
+                    <Separator/>
+                    <Label Content="Stats are calculated for" FontWeight="Bold"/>
+                    <RadioButton Content="constructed" Height="26" GroupName="statsOverallVersionGroup" IsChecked="{Binding VersionOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:OverallVersion.constructed}}"/>
+                    <RadioButton Content="arena" Height="26" GroupName="statsOverallVersionGroup" IsChecked="{Binding VersionOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:OverallVersion.arena}}"/>
+                    <RadioButton Content="both" Height="26" GroupName="statsOverallVersionGroup" IsChecked="{Binding VersionOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:OverallVersion.both}}"/>
+                    <RadioButton Content="auto select" Height="26" GroupName="statsOverallVersionGroup" IsChecked="{Binding VersionOverallProperty, Converter={StaticResource RadioButtonCheckedConverter},
+                        ConverterParameter={x:Static src:OverallVersion.auto}}"/>
+                </StackPanel>
+            </ScrollViewer>
+        </GroupBox>
+        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Margin="5">
+            <Button Content="save &amp; close" Click="Button_Click"/>
+        </StackPanel>
+    </Grid>
+</controls:MetroWindow>
